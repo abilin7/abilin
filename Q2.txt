@@ -1,0 +1,401 @@
+section .text
+global main ;must be declared for linker (ld)
+main: ;tells linker entry point
+mov edx,len ;message length
+mov ecx,msg ;message to write
+mov ebx,1 ;file descriptor (stdout)
+mov eax,4 ;system call number (sys_write)
+int 0x80 ;call kernel
+mov eax,1 ;system call number (sys_exit)
+int 0x80 ;call kernel
+section .data
+msg db 'Hello, world!', 0xa ;our dear string
+len equ $ - msg
+
+..............................star 5
+
+section .text
+	global _start
+_start:
+	mov edx,len
+	mov ecx,msg
+	mov ebx,1
+	mov eax,4
+	int 0x80
+	
+	mov edx,9
+	mov ecx,s2
+	mov ebx,1
+	mov eax,4
+	int 0x80
+	mov eax,1
+	int 0x80
+	
+section .data
+msg db 'Displaing 5 stars',0xa
+len equ $ - msg
+s2 times 5 db '*'
+
+
+
+.....................
+
+section .text
+	global _start
+_start:
+	mov edx,1
+	mov ecx,choice
+	mov ebx,1
+	mov eax,4
+	int 0x80	
+	
+	mov eax,1
+	int 0x80
+
+section .data
+choice DB 'y'
+number DW 12345
+neg_number DW -12345
+big_number DQ 123456789
+real_number1 DD 1.234
+real_number2 DQ 123.456
+
+
+..............add
+
+SYS_EXIT equ 1
+SYS_READ equ 3
+SYS_WRITE equ 4
+STDIN equ 0
+STDOUT equ 1
+segment .data
+msg1 db "Enter a digit ", 0xA,0xD
+len1 equ $- msg1
+msg2 db "Please enter a second digit", 0xA,0xD
+len2 equ $- msg2
+msg3 db "The sum is: "
+len3 equ $- msg3
+segment .bss
+num1 resb 2
+num2 resb 2
+res resb 1
+section .text
+global main ;must be declared for using gcc
+main: ;tell linker entry point
+mov eax, SYS_WRITE
+mov ebx, STDOUT
+mov ecx, msg1
+mov edx, len1
+int 0x80
+mov eax, SYS_READ
+mov ebx, STDIN
+mov ecx, num1
+mov edx, 2
+int 0x80
+mov eax, SYS_WRITE
+mov ebx, STDOUT
+mov ecx, msg2
+mov edx, len2
+int 0x80
+mov eax, SYS_READ
+mov ebx, STDIN
+mov ecx, num2
+mov edx, 2
+int 0x80
+mov eax, SYS_WRITE
+mov ebx, STDOUT
+mov ecx, msg3
+mov edx, len3
+int 0x80
+; moving the first number to eax register and second number to ebx
+; and subtracting ascii '0' to convert it into a decimal number
+mov eax, [number1]
+sub eax, '0'
+mov ebx, [number2]
+sub ebx, '0'
+; add eax and ebx
+add eax, ebx
+; add '0' to to convert the sum from decimal to ASCII
+add eax, '0'
+; storing the sum in memory location res
+mov [res], eax
+; print the sum
+mov eax, SYS_WRITE
+mov ebx, STDOUT
+mov ecx, res
+mov edx, 1
+int 0x80
+exit:
+mov eax, SYS_EXIT
+xor ebx, ebx
+int 0x80
+
+
+................. direct
+
+section .text
+global main ;must be declared for using gcc
+main: ;tell linker entry point
+mov eax,'3'
+sub eax, '0'
+mov ebx, '4'
+sub ebx, '0'
+add eax, ebx
+add eax, '0'
+mov [sum], eax
+mov ecx,msg
+mov edx, len
+mov ebx,1 ;file descriptor (stdout)
+mov eax,4 ;system call number (sys_write)
+int 0x80 ;call kernel
+nwln
+mov ecx,sum
+mov edx, 1
+mov ebx,1 ;file descriptor (stdout)
+mov eax,4 ;system call number (sys_write)
+int 0x80 ;call kernel
+mov eax,1 ;system call number (sys_exit)
+int 0x80 ;call kernel
+section .data
+msg db "The sum is:", 0xA,0xD
+len equ $ - msg
+segment .bss
+sum resb 1
+
+..............sub
+
+section .text
+global main ;must be declared for using gcc
+main: ;tell linker entry point
+mov eax,'5'
+sub eax, '0'
+mov ebx, '3'
+sub ebx, '0'
+sub eax, ebx
+add eax, '0'
+mov [sum], eax
+mov ecx,msg
+mov edx, len
+mov ebx,1 ;file descriptor (stdout)
+mov eax,4 ;system call number (sys_write)
+int 0x80 ;call kernel
+nwln
+mov ecx,sum
+mov edx, 1
+mov ebx,1 ;file descriptor (stdout)
+mov eax,4 ;system call number (sys_write)
+int 0x80 ;call kernel
+mov eax,1 ;system call number (sys_exit)
+int 0x80 ;call kernel
+section .data
+msg db "The sub is:", 0xA,0xD
+len equ $ - msg
+segment .bss
+sum resb 1
+...............mul
+
+section .text
+global main ;must be declared for using gcc
+main: ;tell linker entry point
+mov al,'3'
+sub al, '0'
+mov bl, '2'
+sub bl, '0'
+mul bl
+add al, '0'
+mov [res], al
+mov ecx,msg
+mov edx, len
+mov ebx,1 ;file descriptor (stdout)
+mov eax,4 ;system call number (sys_write)
+int 0x80 ;call kernel
+nwln
+mov ecx,res
+mov edx, 1
+mov ebx,1 ;file descriptor (stdout)
+mov eax,4 ;system call number (sys_write)
+int 0x80 ;call kernel
+mov eax,1 ;system call number (sys_exit)
+int 0x80 ;call kernel
+section .data
+msg db "The result is:", 0xA,0xD
+len equ $- msg
+segment .bss
+res resb 1
+
+
+..................div
+
+section .text
+global main ;must be declared for using gcc
+main: ;tell linker entry point
+mov ax,'8'
+sub ax, '0'
+mov bl, '2'
+sub bl, '0'
+div bl
+add ax, '0'
+mov [res], ax
+mov ecx,msg
+mov edx, len
+mov ebx,1 ;file descriptor (stdout)
+mov eax,4 ;system call number (sys_write)
+int 0x80 ;call kernel
+nwln
+mov ecx,res
+mov edx, 1
+mov ebx,1 ;file descriptor (stdout)
+mov eax,4 ;system call number (sys_write)
+int 0x80 ;call kernel
+mov eax,1 ;system call number (sys_exit)
+int 0x80 ;call kernel
+section .data
+msg db "The result is:", 0xA,0xD
+len equ $- msg
+segment .bss
+res resb 1
+
+
+............................pyramid
+
+
+﻿
+
+SYS_WRITE equ 4
+SYS_READ equ 3
+SYS_EXIT equ 1
+STDOUT equ 1 
+STDIN equ 0
+section .data
+
+msg db "Please enter number:"
+msgLen: equ $-msg
+
+star db '*'
+space db ' '
+rowNum db 1
+spacePos db 1
+starPos db 1
+newLine db 10
+section .bss
+numRows resb 1
+temp resb 1
+
+﻿section .text 
+	global _start
+	_start:
+
+mov eax,SYS_WRITE 
+mov ebx, STDOUT
+mov ecx,msg
+mov edx,msgLen
+int 80h
+; Get user input 
+mov eax,SYS_READ 
+mov ebx, STDIN 
+mov ecx, numRows 
+mov edx,1
+int 80h
+; Print user input
+mov eax, SYS_WRITE 
+mov ebx, STDOUT
+mov ecx, numRows
+mov edx,1
+int 80h
+
+﻿sub byte [numRows],'0'
+
+printRow:
+call newLn
+
+mov byte [spacePos],1 
+mov byte [starPos],1
+
+mov al, [rowNum]
+ 
+cmp al, [numRows]
+
+jle printChars
+
+jmp _end
+
+﻿
+
+printChars:
+; First, print the sp 
+call printSpaces
+; Then, print the sta 
+call printStars
+; Increment the row n 
+inc byte [rowNum]
+; Loop back to print 
+jmp printRow
+
+﻿
+
+topSpace: 
+printSpaces:
+
+mov al, [numRows]
+mov [temp], al
+mov al,[temp]
+
+sub al, [rowNum]
+
+mov [temp], al
+
+cmp [spacePos], al
+
+jle printSP
+
+ret
+printSP:
+mov eax,SYS_WRITE
+mov ebx, STDOUT
+mov ecx,space
+mov edx,1
+int 80h
+
+inc byte [spacePos]
+jmp topSpace
+
+
+﻿
+
+topStar: 
+printStars:
+
+mov al, [rowNum]
+mov b1,2
+mul bl
+sub al,1
+
+cmp [starPos], al
+
+jle printST
+ret
+; Prints the star
+printST:
+mov eax,SYS_WRITE
+mov ebx, STDOUT
+mov ecx, star
+mov edx,1
+int 80h
+
+inc byte [starPos]
+jmp topStar
+
+﻿
+
+newLn:
+mov eax, SYS_WRITE 
+mov ebx, STDOUT 
+mov ecx, newLine
+mov edx,1 
+int 80h 
+ret
+; Exit block
+_end:
+mov eax,SYS_EXIT
+mov ebx,0 
+int 80h
