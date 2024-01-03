@@ -1,0 +1,215 @@
+en/enable - privillage exect mood (#) show krnne meke 
+sh run   // show all configurations
+
+Exit // dan inna mood eken kalin ekata yanna
+
+Lab1#conf t    // global configuration mood config krnne meke
+Lab1(config)#banner motd "unauthorized messege"   // normal mz ekk
+
+Lab1#sh run  // show all configurations
+
+Switch(config)#hostname Lab1 // host name change
+Lab1(config)#enable secret 123 // password 
+
+//switch ekat IP dammama vlan1 ekata thma danne
+Lab1(config)#int vlan 1
+Lab1(config-if)#ip ad
+Lab1(config-if)#ip address 192.168.10.2 255.255.255.0
+Lab1(config-if)#exit
+Lab1(config)#exit
+
+//router eke ip eka gateway
+Switch(config)#ip de
+Switch(config)#ip default-gateway 192.168.10.1
+Switch(config)#exit
+Switch#
+
+// router ekt ip dann gigabitethernet 0/0ta
+Router# conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Router(config)#int gig0/0/0
+Router(config-if)#ip address 192.168.10.1 255.255.255.0
+Router(config-if)#no sh
+Router(config-if)#no shutdown // kolapata thrikone
+
+//server ekata ip danna
+int f0/0
+ip address 192.168.1.1 255.255.255.0
+int f0/1
+ip address 192.168.1.1 255.255.255.0
+
+//lap eke ip
+desktop-->IP configuration --> tick static
+ipv4 - lap ekeIP
+default gate - routerIP
+
+//connection check karanna
+lap hri pc eke desktop --> command prompt --> ping IPaddress you want
+
+//Configure CONSOLE access with the following settings console cable ekata password 
+Switch>en
+Switch#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Switch(config)#line con 0
+Switch(config-line)#password cisco
+Switch(config-line)#logging synchronous  //Synchronous logging
+Switch(config-line)#login
+Switch(config-line)#history size 15  //configuring the history size for the CLI.
+Switch(config-line)#exec-timeout 6 45  //configures the exec timeout settings.
+Switch(config-line)#end
+
+
+//Configure Telnet access on all virtual terminal lines
+Switch(config)# line vty 0 15     
+Switch(config-line)#password cisco
+Switch(config-line)#logging synchronous  //Synchronous logging
+Switch(config-line)#login
+Switch(config-line)#history size 15  //configuring the history size for the CLI.
+Switch(config-line)#exec-timeout 6 45  //configures the exec timeout settings.
+Switch(config-line)#end
+
+
+//DHCP config
+server eke service eke DHCP on karala inna
+gateway , dns server, max number 12t adui
+add save
+int f0/0
+ip address 192.168.1.1 255.255.255.0
+int f0/1
+ip address 192.168.1.1 255.255.255.0
+no shutdown
+exit
+//create ip pool 
+#ip dhcp pool NET1
+//Set the default-router as 192.168.1.1
+default-router 192.168.1.1
+
+
+Router>en
+Router#conf t
+Router(config)#hostname DHCPServer
+DHCPServer(config)#int f0/0
+DHCPServer(config-if)#ip address 192.168.2.1 255.255.255.0
+DHCPServer(config-if)#exit
+DHCPServer(config)#int f0/1
+DHCPServer(config-if)#ip address 192.168.1.1 255.255.255.0
+DHCPServer(config-if)#no shutdown 
+DHCPServer(config-if)#exit
+DHCPServer(config)#ip dhcp pool NET1
+DHCPServer(dhcp-config)#default-router 192.168.1.1  //DHCP eke e network ek paththe thiyena address eka
+DHCPServer(dhcp-config)#network 192.168.1.0 255.255.255.0  //e side eke full network address eka
+DHCPServer(dhcp-config)#dns-server 192.168.1.2  //DNS eke address eka
+DHCPServer(dhcp-config)#end
+DHCPServer#wr //for save
+
+// test Dhcp
+pc walata gihin desktop >> ip config >> tick dhcp
+
+//Reserve a range of IP address in DHCP Server
+Open DHCP Server in CLI
+#en
+#config t
+#ip dhcp excluded-address 192.168.1.1 192.168.1.10
+Open PC0 and obtain the IP address automatically and see what will happen.
+
+//dns server eka config
+desktop --> ipconfiguration
+IP add, Default gateway , dns server fill krnna
+
+//web server config 
+dns wagemai mul ttika
+services >> http eke html file ekk dnwa
+DNS server eke,
+services >> dns eka name : www.google.com 
+address: web server ip
+Add & save
+ekat connect pc ekkt desktop >> web browser gihin www.google.com denna
+
+
+//Configuring VLANs
+Switch#conf t
+Switch(config)#vlan 10
+Switch(config-vlan)#name faculty
+Switch(config-vlan)#exit
+Switch(config)#vlan 20
+Switch(config-vlan)#name students
+Switch(config-vlan)#end
+Switch#
+Switch#show vl //show all vlans 
+
+
+//Assign VLANs to Ports
+
+Switch#conf t
+Switch(config)#int f0/1
+Switch(config-if)#switchport access vlan 10
+Switch(config-if)#
+
+//Configure password encryption on the switch using the global configuration command.
+#service password-encryption
+
+
+//Configure the IP address of the switch as 192.168.1.2/24 and it's default gateway IP (192.168.1.1).
+#interface Vlan1
+#ip address 192.168.1.2 255.255.255.0
+#ip default-gateway 192.168.1.1
+
+//Test telnet connectivity from the Remote Laptop using the telnet client.
+telnet <Switch-IP-Address> //lap terminal eke type krnna
+
+//In which mode/s can you issue show commands in Cisco's IOS- 
+User EXEC mode and Privileged EXEC mode.
+
+//Which command/s would you use to find the IP address of the Ethernet 0 interface?
+show ip interface Ethernet0
+
+//Which command/s will return the router’s previously saved configuration?
+reload.
+
+//Which command would you use in Command Line Interface (CLI) to change the “User” mode to “Privileged EXEC”?
+enable command
+
+//Which prompt/s can you execute the show command?
+in Privileged EXEC mode
+
+//What is the quickest method to get back to the “Privileged” mode from “Interface Configuration” mode?
+exit or end and press Enter.
+
+//What is the baud rate setting for your terminal emulation program to communicate through your console port?
+The typical baud rate setting for console communication is 9600 bps
+
+//You have configured a description on serial interfaces. Which command/s will display the description?
+show interfaces description command
+
+//How do you clear the counters on an interface in the router?
+clear counters command
+
+//What is the command to name the router? Explain your answer with an example.
+can name the router using the hostname command followed by the desired name.
+For example: Router(config)# hostname MyRouter
+
+
+
+i. What is the mode when you log in to the “Command Line Interface” in a CISCO router? the User EXEC mode.
+
+ii. Which mode you need to use, to access all commands? need to enter the Privileged EXEC mode. 
+
+iii. How to switch the global configuration mode to privileged exact mode? exit
+ 
+iv. What is the command to show the important status information of router? show runningconfig or show ip interface brief 
+
+v. How do you clear the counters or interface of router? can use the clear counters command
+
+vi. How do you exit from global configuration mode? exit command. 
+
+vii. List at least two methods to exit from privilege exact mode.  exit or logout command 
+
+viii. How do you get the brief description of the help system in any command mode? Typing a ‘?’ 
+
+ ix. What is the command to name the router? Explain your answer with an example. The command to name the router is hostname. For example, to name the router "MyRouter," can use hostname MyRouter
+
+ x. How do you set an encrypted password to router? can use the 'enable secret' ex: enable secret mysecretpassword
+
+
+
+
